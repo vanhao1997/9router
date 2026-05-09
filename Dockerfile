@@ -9,7 +9,7 @@ RUN apk --no-cache upgrade && apk --no-cache add nodejs npm python3 make g++ lin
 
 COPY package.json ./
 RUN --mount=type=cache,target=/root/.npm \
-  npm install
+  npm install --include=dev
 
 COPY . ./
 ENV NEXT_TELEMETRY_DISABLED=1
