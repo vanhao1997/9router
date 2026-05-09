@@ -664,6 +664,8 @@ export default function APIPageClient({ machineId }) {
   }
 
   const currentEndpoint = baseUrl;
+  const primaryKey = keys.find((key) => key.isActive !== false) || keys[0];
+  const chatCompletionsUrl = `${currentEndpoint}/chat/completions`;
 
   return (
     <div className="flex flex-col gap-8">
@@ -881,6 +883,113 @@ export default function APIPageClient({ machineId }) {
             </div>
           </div>
         )}
+      </Card>
+
+      {/* Usage guide */}
+      <Card>
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <h2 className="text-lg font-semibold flex items-center gap-2">
+                <span className="material-symbols-outlined text-primary">route</span>
+                Huong dan su dung 9Router
+              </h2>
+              <p className="mt-1 text-sm text-text-muted">
+                Lam theo 4 buoc nay de dung endpoint tren VPS voi Codex, Cursor, Claude Code,
+                OpenCode hoac bat ky tool nao ho tro OpenAI API.
+              </p>
+            </div>
+            <a
+              href="/dashboard/providers"
+              className="inline-flex h-9 items-center justify-center gap-2 rounded-[10px] border border-border bg-surface-2 px-4 text-sm font-semibold text-text-main transition-colors hover:bg-surface-3"
+            >
+              <span className="material-symbols-outlined text-[18px]">hub</span>
+              Providers
+            </a>
+          </div>
+
+          <div className="grid gap-4 lg:grid-cols-2">
+            <GuideStep
+              number="1"
+              icon="login"
+              title="Dang nhap dashboard"
+              text="Mo trang login, nhap mat khau dashboard dang duoc dat trong Coolify INITIAL_PASSWORD."
+            />
+            <GuideStep
+              number="2"
+              icon="hub"
+              title="Ket noi provider"
+              text="Vao Providers, them provider ban muon dung, roi test model de chac provider hoat dong."
+            />
+            <GuideStep
+              number="3"
+              icon="vpn_key"
+              title="Lay API key"
+              text="Dung key mac dinh ben duoi, hoac tao key moi trong phan API Keys neu muon tach rieng tung tool."
+            />
+            <GuideStep
+              number="4"
+              icon="terminal"
+              title="Cau hinh tool"
+              text="Trong tool, dat Base URL la endpoint /v1, API key la key ben duoi, model la model da co provider."
+            />
+          </div>
+
+          <div className="grid gap-4 lg:grid-cols-2">
+            <div className="min-w-0 rounded-[10px] border border-border-subtle bg-bg p-4">
+              <div className="mb-3 flex items-center gap-2">
+                <span className="material-symbols-outlined text-[18px] text-primary">settings_ethernet</span>
+                <p className="text-sm font-semibold text-text-main">Thong tin cau hinh</p>
+              </div>
+              <div className="flex flex-col gap-3">
+                <GuideCopyRow
+                  label="Base URL"
+                  value={currentEndpoint}
+                  copyId="guide_base_url"
+                  copied={copied}
+                  onCopy={copy}
+                />
+                <GuideCopyRow
+                  label="Chat URL"
+                  value={chatCompletionsUrl}
+                  copyId="guide_chat_url"
+                  copied={copied}
+                  onCopy={copy}
+                />
+                {primaryKey ? (
+                  <GuideCopyRow
+                    label="API Key"
+                    value={primaryKey.key}
+                    copyId="guide_api_key"
+                    copied={copied}
+                    onCopy={copy}
+                  />
+                ) : (
+                  <div className="rounded-[8px] border border-dashed border-border p-3 text-sm text-text-muted">
+                    Chua co API key. Bam Create Key trong phan API Keys ben duoi.
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="min-w-0 rounded-[10px] border border-border-subtle bg-bg p-4">
+              <div className="mb-3 flex items-center gap-2">
+                <span className="material-symbols-outlined text-[18px] text-primary">code_blocks</span>
+                <p className="text-sm font-semibold text-text-main">Vi du OpenAI compatible</p>
+              </div>
+              <div className="overflow-x-auto rounded-[8px] bg-surface-2 p-3">
+                <pre className="text-xs leading-5 text-text-main">
+{`Base URL: ${currentEndpoint}
+API Key: ${primaryKey?.key || "tao-key-o-phan-API-Keys"}
+Model: chon model trong Providers/Models`}
+                </pre>
+              </div>
+              <p className="mt-3 text-xs text-text-muted">
+                Neu tool yeu cau endpoint day du, dung Chat URL. Neu tool yeu cau Base URL, dung Base URL.
+              </p>
+            </div>
+          </div>
+        </div>
       </Card>
 
       {/* Token Saver (RTK + Caveman) */}
@@ -1273,6 +1382,43 @@ export default function APIPageClient({ machineId }) {
           </div>
         </div>
       </Modal>
+    </div>
+  );
+}
+
+/** Setup guide step */
+function GuideStep({ number, icon, title, text }) {
+  return (
+    <div className="flex min-w-0 gap-3 rounded-[10px] border border-border-subtle bg-bg p-4">
+      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[9px] bg-primary/10 text-primary">
+        <span className="material-symbols-outlined text-[18px]">{icon}</span>
+      </div>
+      <div className="min-w-0">
+        <p className="text-xs font-mono text-text-muted">Buoc {number}</p>
+        <p className="mt-0.5 text-sm font-semibold text-text-main">{title}</p>
+        <p className="mt-1 text-sm text-text-muted">{text}</p>
+      </div>
+    </div>
+  );
+}
+
+/** Setup guide copy row */
+function GuideCopyRow({ label, value, copyId, copied, onCopy }) {
+  return (
+    <div className="min-w-0">
+      <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-text-muted">{label}</p>
+      <div className="flex min-w-0 items-center gap-2">
+        <code className="min-w-0 flex-1 overflow-x-auto whitespace-nowrap rounded-[8px] border border-border bg-input px-3 py-2 text-xs text-text-main">
+          {value}
+        </code>
+        <button
+          onClick={() => onCopy(value, copyId)}
+          className="shrink-0 rounded p-2 text-text-muted transition-colors hover:bg-black/5 hover:text-primary dark:hover:bg-white/5"
+          title={`Copy ${label}`}
+        >
+          <span className="material-symbols-outlined text-[18px]">{copied === copyId ? "check" : "content_copy"}</span>
+        </button>
+      </div>
     </div>
   );
 }
