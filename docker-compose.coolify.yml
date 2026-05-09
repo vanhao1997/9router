@@ -1,0 +1,30 @@
+services:
+  9router:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "20128:20128"
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
+      INITIAL_PASSWORD: ${INITIAL_PASSWORD}
+      DATA_DIR: /app/data
+      PORT: 20128
+      HOSTNAME: 0.0.0.0
+      NODE_ENV: production
+      BASE_URL: ${BASE_URL}
+      NEXT_PUBLIC_BASE_URL: ${NEXT_PUBLIC_BASE_URL}
+      CLOUD_URL: ${CLOUD_URL:-https://9router.com}
+      NEXT_PUBLIC_CLOUD_URL: ${NEXT_PUBLIC_CLOUD_URL:-https://9router.com}
+      API_KEY_SECRET: ${API_KEY_SECRET}
+      MACHINE_ID_SALT: ${MACHINE_ID_SALT}
+      AUTH_COOKIE_SECURE: ${AUTH_COOKIE_SECURE:-true}
+      REQUIRE_API_KEY: ${REQUIRE_API_KEY:-true}
+      ENABLE_REQUEST_LOGS: ${ENABLE_REQUEST_LOGS:-false}
+      OBSERVABILITY_ENABLED: ${OBSERVABILITY_ENABLED:-true}
+    volumes:
+      - 9router-data:/app/data
+
+volumes:
+  9router-data:
