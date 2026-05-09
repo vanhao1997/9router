@@ -989,6 +989,64 @@ Model: chon model trong Providers/Models`}
               </p>
             </div>
           </div>
+
+          <div className="rounded-[10px] border border-border-subtle bg-bg p-4">
+            <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+              <div className="min-w-0">
+                <div className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-[18px] text-primary">account_tree</span>
+                  <p className="text-sm font-semibold text-text-main">Quan ly nhieu tai khoan OpenAI</p>
+                </div>
+                <p className="mt-1 text-sm text-text-muted">
+                  Dung nhieu OpenAI API key trong Providers de chia tai, fallback, hoac tach chi phi theo tung tai khoan.
+                </p>
+              </div>
+              <a
+                href="/dashboard/providers/openai"
+                className="inline-flex h-8 items-center justify-center gap-1.5 rounded-[8px] border border-border bg-surface-2 px-3 text-xs font-semibold text-text-main transition-colors hover:bg-surface-3"
+              >
+                <span className="material-symbols-outlined text-[16px]">open_in_new</span>
+                OpenAI provider
+              </a>
+            </div>
+
+            <div className="grid gap-3 lg:grid-cols-3">
+              <AccountGuideItem
+                icon="add_circle"
+                title="Them tung account"
+                text="Vao Providers > OpenAI > Add. Moi API key nen dat ten ro rang nhu openai-main, openai-team, openai-backup."
+              />
+              <AccountGuideItem
+                icon="shuffle"
+                title="Chon cach chia request"
+                text="Bat Round Robin neu muon xoay tai khoan. Tat Round Robin neu muon uu tien account tren cung va dung account khac khi ban tam dung key."
+              />
+              <AccountGuideItem
+                icon="science"
+                title="Test truoc khi dung"
+                text="Sau khi them key, test model trong Providers. Neu mot account het quota, pause connection do de request di qua key con lai."
+              />
+            </div>
+
+            <div className="mt-4 grid gap-3 lg:grid-cols-2">
+              <div className="rounded-[8px] border border-border bg-surface-2 p-3">
+                <p className="text-xs font-semibold text-text-main">Khi nao dung OpenAI provider?</p>
+                <p className="mt-1 text-xs text-text-muted">
+                  Dung khi ban co nhieu API key OpenAI chuan, cung base URL api.openai.com. Trang OpenAI cho phep them nhieu connection trong cung provider.
+                </p>
+              </div>
+              <div className="rounded-[8px] border border-border bg-surface-2 p-3">
+                <p className="text-xs font-semibold text-text-main">Khi nao dung OpenAI Compatible?</p>
+                <p className="mt-1 text-xs text-text-muted">
+                  Dung khi moi account can base URL hoac prefix rieng. Moi compatible node chi nen co mot key; tao node khac neu can tach them account.
+                </p>
+              </div>
+            </div>
+
+            <p className="mt-3 text-xs text-text-muted">
+              Luu y: API key trong phan API Keys la key cho tool goi vao 9Router. OpenAI API key that nam trong Providers va khong can dua vao tool ben ngoai.
+            </p>
+          </div>
         </div>
       </Card>
 
@@ -1419,6 +1477,19 @@ function GuideCopyRow({ label, value, copyId, copied, onCopy }) {
           <span className="material-symbols-outlined text-[18px]">{copied === copyId ? "check" : "content_copy"}</span>
         </button>
       </div>
+    </div>
+  );
+}
+
+/** Multi-account provider guide item */
+function AccountGuideItem({ icon, title, text }) {
+  return (
+    <div className="min-w-0 rounded-[8px] border border-border bg-surface-2 p-3">
+      <div className="flex items-center gap-2">
+        <span className="material-symbols-outlined text-[18px] text-primary">{icon}</span>
+        <p className="text-sm font-semibold text-text-main">{title}</p>
+      </div>
+      <p className="mt-2 text-xs leading-5 text-text-muted">{text}</p>
     </div>
   );
 }
